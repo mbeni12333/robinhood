@@ -43,7 +43,7 @@ def evaluateObjective(solution):
     
     return
 
-normal_generator = lambda n: np.random.randn(n)*0.1
+normal_generator = lambda n: np.random.randn(n)*0.5
 uniform_generator = lambda n: np.random.rand(n)
 pareto_generator = lambda n: np.random.pareto(1.1, n)
 zero_generator = lambda n: np.zeros((n, ))
@@ -64,11 +64,13 @@ def generateInstance(nb_tasks=10,
     return [Task(i, xi, yi, vi) for i, (xi, yi, vi) in enumerate(zip(X, Y, V))], erreur
     
     
-def plotGant(solution, nb_tasks=10):
-
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
-
+def plotGant(solution, nb_tasks=10, colors=None):
+#
+#    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+#          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+    if colors is None:
+        colors = np.random.rand(nb_tasks, 3)
+        
     fig, ax = plt.subplots()
 
       
@@ -84,15 +86,8 @@ def plotGant(solution, nb_tasks=10):
     for chunk in solution:
         ax.broken_barh([(timestep, chunk[1])],
                         (chunk[0]-0.25, 0.5),
-                        facecolors=colors[len(colors)%(chunk[0]+1)])
+                        facecolors=colors[chunk[0]])
         timestep += chunk[1]
 
     plt.show()
-
-if __name__ == "__main__":
-    instance, erreur = generateInstance()
-    instance_sorted = sorted(instance, key=lambda task: task.time)
-    
-    solution = [(task.id, task.time) for task in instance_sorted]
-    plotGant(solution)
     
