@@ -12,7 +12,7 @@ class Task(object):
         self.id = id
         self.time = time
         self.time_estimated = time_estimated
-        self.remainingtime = time
+        self.remainingTime = time
         self.start = start
     
     def getWaitingTime(self, timestamp):
@@ -21,7 +21,7 @@ class Task(object):
         return timestamp - self.start
     
     def reset(self):
-        self.remainingtime = self.time
+        self.remainingTime = self.time
      
     def run(self, time):
         """
@@ -36,14 +36,26 @@ class Task(object):
         self.remainingTime -= time        
         return 0
     
-def evaluateObjective(solution):
+def evaluateObjective(instance, solution):
     """
-    solution: list(tuple(task_id, ))
+    solution: list(tuple(task_id, time))
     """
     
-    return
+    # reset tasks
+    for task in instance:
+        task.reset()
+        
+    # sum end dates
+    timestep = 0
+    obj = 0
+    for chunk in solution:
+        if instance[chunk[0]].run(chunk[1]) == 0:
+            obj += timestep
+        timestep += chunk[1]
+    
+    return obj
 
-normal_generator = lambda n: np.random.randn(n)*0.5
+normal_generator = lambda n: np.random.randn(n)
 uniform_generator = lambda n: np.random.rand(n)
 pareto_generator = lambda n: np.random.pareto(1.1, n)
 zero_generator = lambda n: np.zeros((n, ))
@@ -64,7 +76,7 @@ def generateInstance(nb_tasks=10,
     return [Task(i, xi, yi, vi) for i, (xi, yi, vi) in enumerate(zip(X, Y, V))], erreur
     
     
-def plotGant(solution, nb_tasks=10, colors=None):
+def plotGant(solution, nb_tasks=10, colors=None, title=None):
 #
 #    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
 #          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
@@ -89,5 +101,7 @@ def plotGant(solution, nb_tasks=10, colors=None):
                         facecolors=colors[chunk[0]])
         timestep += chunk[1]
 
+    if title is not None:
+        plt.title(f"Objective : {title:0.2f}", fontsize=16)
     plt.show()
     
