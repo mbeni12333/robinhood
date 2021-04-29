@@ -29,12 +29,12 @@ class Task(object):
         """
         
         if(self.remainingTime < time):
-            tmp = time - self.remainingTime
+            tmp = self.remainingTime
             self.remainingTime = 0
             return tmp
         
         self.remainingTime -= time        
-        return 0
+        return time
     
 def evaluateObjective(instance, solution):
     """
@@ -49,7 +49,9 @@ def evaluateObjective(instance, solution):
     timestep = 0
     obj = 0
     for chunk in solution:
-        if instance[chunk[0]].run(chunk[1]) == 0:
+        runtime = instance[chunk[0]].run(chunk[1])
+        
+        if instance[chunk[0]].remainingTime == 0:
             obj += timestep
         timestep += chunk[1]
     
@@ -83,7 +85,7 @@ def plotGant(solution, nb_tasks=10, colors=None, title=None):
     if colors is None:
         colors = np.random.rand(nb_tasks, 3)
         
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(nb_tasks, 20))
 
       
     # Setting labels for x-axis and y-axis
@@ -102,6 +104,6 @@ def plotGant(solution, nb_tasks=10, colors=None, title=None):
         timestep += chunk[1]
 
     if title is not None:
-        plt.title(f"Objective : {title:0.2f}", fontsize=16)
+        plt.title(f"Objective : {title:0.2f}", fontsize=32)
     plt.show()
     

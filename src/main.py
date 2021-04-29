@@ -15,3 +15,7 @@ utils.plotGant(solution, nb_tasks, colors, obj)
 solution = algos.SPT(instance)
 obj = utils.evaluateObjective(instance, solution)
 utils.plotGant(solution, nb_tasks, colors, obj)
+
+solution = algos.ROUND_ROBIN(instance)
+obj = utils.evaluateObjective(instance, solution)
+utils.plotGant(solution, nb_tasks, colors, obj)
