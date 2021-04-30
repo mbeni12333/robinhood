@@ -11,8 +11,11 @@ class Task(object):
         """
         self.id = id
         self.time = time
-        self.time_estimated = time_estimated
         self.remainingTime = time
+        
+        self.time_estimated = time_estimated
+        self.remainingTime_estimated = time_estimated
+        
         self.start = start
         self.hasFinished = False
     
@@ -23,6 +26,7 @@ class Task(object):
     
     def reset(self):
         self.remainingTime = self.time
+        self.remainingTime_estimated = self.time_estimated
         self.hasFinished = False
      
     def run(self, time):
@@ -36,7 +40,8 @@ class Task(object):
             self.hasFinished = True
             return tmp
         
-        self.remainingTime -= time        
+        self.remainingTime -= time 
+        self.remainingTime_estimated -= time
         return time
     
 def evaluateObjective(instance, solution):

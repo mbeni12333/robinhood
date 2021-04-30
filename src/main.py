@@ -11,12 +11,16 @@ colors = np.random.rand(nb_tasks, 3)
 # obj = utils.evaluateObjective(instance, solution)
 # utils.plotGant(solution, nb_tasks, colors, obj)
 
-solution = algos.SPT(instance)
+# solution = algos.SPT(instance)
+# obj = utils.evaluateObjective(instance, solution)
+# utils.plotGant(solution, nb_tasks, colors, obj)
+
+
+solution = algos.PREDICT_PART2(instance)
 obj = utils.evaluateObjective(instance, solution)
 utils.plotGant(solution, nb_tasks, colors, obj)
 
-
-solution = algos.SPT_PART2(instance)
+solution = algos.PREDICT_PART2(instance, lambda task: task.remainingTime_estimated)
 obj = utils.evaluateObjective(instance, solution)
 utils.plotGant(solution, nb_tasks, colors, obj)
 

@@ -2,7 +2,7 @@ import numpy as np
 import utils
 
 
-def SPT_PART2(instance, sortingFunction=lambda task: task.remainingTime):
+def PREDICT_PART2(instance, sortingFunction=lambda task: task.remainingTime):
     """
     """
     
