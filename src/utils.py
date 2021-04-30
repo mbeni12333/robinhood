@@ -84,12 +84,12 @@ def generateInstance(nb_tasks=10,
     erreur = eps.sum()
     
     return [Task(i, xi, yi, vi) for i, (xi, yi, vi) in enumerate(zip(X, Y, V))], erreur
+
     
+
     
 def plotGant(solution, nb_tasks=10, colors=None, title=None):
-#
-#    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-#          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+
     if colors is None:
         colors = np.random.rand(nb_tasks, 3)
         
