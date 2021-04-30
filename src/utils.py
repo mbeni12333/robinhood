@@ -14,6 +14,7 @@ class Task(object):
         self.time_estimated = time_estimated
         self.remainingTime = time
         self.start = start
+        self.hasFinished = False
     
     def getWaitingTime(self, timestamp):
         """
@@ -22,6 +23,7 @@ class Task(object):
     
     def reset(self):
         self.remainingTime = self.time
+        self.hasFinished = False
      
     def run(self, time):
         """
@@ -31,6 +33,7 @@ class Task(object):
         if(self.remainingTime <= time):
             tmp = self.remainingTime
             self.remainingTime = 0
+            self.hasFinished = True
             return tmp
         
         self.remainingTime -= time        
@@ -60,7 +63,7 @@ def evaluateObjective(instance, solution):
 normal_generator = lambda n: np.random.randn(n)
 uniform_generator = lambda n: np.random.rand(n)
 pareto_generator = lambda n: np.random.pareto(1.1, n)
-poisson_generator = lambda n: np.random.poisson(1, (n, ))
+poisson_generator = lambda n: np.random.poisson(1.0, (n, ))
 zero_generator = lambda n: np.zeros((n, ))
 
 def generateInstance(nb_tasks=10,
@@ -72,7 +75,6 @@ def generateInstance(nb_tasks=10,
     eps = eps_generator(nb_tasks)
     Y = X + eps
     V = v_generator(nb_tasks)
-    
     
     erreur = eps.sum()
     
