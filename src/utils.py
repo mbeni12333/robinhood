@@ -28,7 +28,7 @@ class Task(object):
         run this task for time units
         """
         
-        if(self.remainingTime < time):
+        if(self.remainingTime <= time):
             tmp = self.remainingTime
             self.remainingTime = 0
             return tmp
@@ -60,6 +60,7 @@ def evaluateObjective(instance, solution):
 normal_generator = lambda n: np.random.randn(n)
 uniform_generator = lambda n: np.random.rand(n)
 pareto_generator = lambda n: np.random.pareto(1.1, n)
+poisson_generator = lambda n: np.random.poisson(1, (n, ))
 zero_generator = lambda n: np.zeros((n, ))
 
 def generateInstance(nb_tasks=10,
