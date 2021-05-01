@@ -77,6 +77,7 @@ def generateInstance(nb_tasks=10,
                      v_generator=zero_generator):
     
     X = x_generator(nb_tasks)
+
     eps = eps_generator(nb_tasks)
     Y = X + eps
     V = v_generator(nb_tasks)
