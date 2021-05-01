@@ -15,26 +15,36 @@ def simulate(numberInstances=500, tasksPerInstance=50):
         #eps_generator = lambda n: np.random.randn(n)
         x_generator = lambda n: np.random.pareto(a, (n, ))
         
-        points = np.zeros((numberInstances, 3))
+        points = np.zeros((numberInstances, 4))
         print(a)
         
         for i in range(numberInstances):
             #print(f"instance {i}")
             instance, erreur = utils.generateInstance(tasksPerInstance,
-                                                      x_generator=x_generator)
+                                                      x_generator=x_generator,
+                                                      v_generator=utils.poisson_generator)
             
-            solution = algos.PREDICT_PART2(instance)
+            #solution = algos.PREDICT_PART2(instance)
+            solution = algos.spt(instance)
             obj1 = utils.evaluateObjective(instance, solution)
             #print("inished spt")
-            solution = algos.PREDICT_PART2(instance, lambda task: task.time_estimated)
+            #solution = algos.PREDICT_PART2(instance, lambda task: task.time_estimated)
+            solution = algos.pred(instance)
             obj2 = utils.evaluateObjective(instance, solution)
             #print("inished predict")
-            solution = algos.ROUND_ROBIN(instance)
+            #solution = algos.ROUND_ROBIN(instance)
+            solution = algos.robin(instance)
             obj3 = utils.evaluateObjective(instance, solution)
+            
+            #print("inished predict")
+            #solution = algos.robinpredidk(instance)
+            solution = algos.robin(instance)
+            obj4 = utils.evaluateObjective(instance, solution)
+            
             #print("inished round robin")
             #rapportDeCompettetivite = obj/obj_optimale
             
-            points[i] = np.array([1, obj2/obj1, obj3/obj1])
+            points[i] = np.array([1, obj2/obj1, obj3/obj1, obj4/obj1])
 
         
         bars.append(points.max(0))
@@ -42,15 +52,15 @@ def simulate(numberInstances=500, tasksPerInstance=50):
     
     X = np.arange(len(params))
     bars = np.array(bars)
-    colors = ["green", "blue", "red"]
-    labels = ["SPT", "PREDICT", "ROUND_ROBIN"] 
+    colors = ["green", "blue", "red", "black"]
+    labels = ["SPT", "PREDICT", "ROUND_ROBIN", "ROUND_ROBIN_IDK"] 
     
-    for i in range(3):
-        plt.bar(X+0.25*i, bars[:, i], width=0.25, color=colors[i], label=labels[i])
+    for i in range(4):
+        plt.bar(X+0.20*i, bars[:, i], width=0.20, color=colors[i], label=labels[i])
     
     plt.ylabel("Rapport de compettetivite")
     plt.xlabel("pareto param")
-    plt.xticks(X+0.25, params)
+    plt.xticks(X+0.5, params)
     plt.legend()
     plt.show()
 
@@ -58,29 +68,29 @@ simulate()
 
 
 
-# nb_tasks = 10
+nb_tasks = 10
 
-# instance, erreur = utils.generateInstance(nb_tasks, v_generator=utils.poisson_generator)
-# colors = np.random.rand(nb_tasks, 3)
+instance, erreur = utils.generateInstance(nb_tasks,
+                                          v_generator=utils.poisson_generator)
+colors = np.random.rand(nb_tasks, 3)
 
-# # solution = algos.PREDICT(instance)
-# # obj = utils.evaluateObjective(instance, solution)
-# # utils.plotGant(solution, nb_tasks, colors, obj)
+solution = algos.spt(instance)
+obj = utils.evaluateObjective(instance, solution)
+utils.plotGant(solution, nb_tasks, colors, obj)
 
-# # solution = algos.SPT(instance)
-# # obj = utils.evaluateObjective(instance, solution)
-# # utils.plotGant(solution, nb_tasks, colors, obj)
+solution = algos.pred(instance)
+obj = utils.evaluateObjective(instance, solution)
+utils.plotGant(solution, nb_tasks, colors, obj)
+
+solution = algos.robin(instance)
+obj = utils.evaluateObjective(instance, solution)
+utils.plotGant(solution, nb_tasks, colors, obj)
+
+solution = algos.robinpredidk(instance)
+obj = utils.evaluateObjective(instance, solution)
+utils.plotGant(solution, nb_tasks, colors, obj)
 
 
-# solution = algos.PREDICT_PART2(instance)
+# solution = algos.ROUND_ROBIN(instance)
 # obj = utils.evaluateObjective(instance, solution)
 # utils.plotGant(solution, nb_tasks, colors, obj)
-
-# solution = algos.PREDICT_PART2(instance, lambda task: task.remainingTime_estimated)
-# obj = utils.evaluateObjective(instance, solution)
-# utils.plotGant(solution, nb_tasks, colors, obj)
-
-
-# # solution = algos.ROUND_ROBIN(instance)
-# # obj = utils.evaluateObjective(instance, solution)
-# # utils.plotGant(solution, nb_tasks, colors, obj)

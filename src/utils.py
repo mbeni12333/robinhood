@@ -89,7 +89,7 @@ def generateInstance(nb_tasks=10,
     
 
     
-def plotGant(solution, nb_tasks=10, colors=None, title=None, filename = None):
+def plotGant(solution, nb_tasks=10, colors=None, title=None, filename = "test.png"):
 
     if colors is None:
         colors = np.random.rand(nb_tasks, 3)

@@ -2,7 +2,29 @@ import numpy as np
 import utils
 
 
-def PREDICT_PART2(instance, sortingFunction=lambda task: task.remainingTime):
+def pred(instance):
+    return GENERIC(instance,
+                         sortingFunction=lambda task: task.remainingTime_estimated,
+                         useQuantum=False)
+
+def spt(instance):
+    return GENERIC(instance,
+                         sortingFunction=lambda task: task.remainingTime,
+                         useQuantum=False)
+    
+
+def robin(instance):
+    return GENERIC(instance,
+                         sortingFunction=None,
+                         useQuantum=True)
+
+def robinpredidk(instance):
+    return GENERIC(instance,
+                         sortingFunction=lambda task: task.remainingTime_estimated,
+                         useQuantum=True)
+    
+
+def GENERIC(instance, sortingFunction=lambda task: task.remainingTime, useQuantum=False):
     """
     """
     
@@ -10,8 +32,11 @@ def PREDICT_PART2(instance, sortingFunction=lambda task: task.remainingTime):
         task.reset()
     
     instance_sorted = sorted(instance, key=lambda task: task.start)
-    queue = sorted([task for task in instance_sorted if task.start == 0],
-                   key=sortingFunction)
+    queue = [task for task in instance_sorted if task.start == 0]
+    
+    if sortingFunction != None:
+        queue = sorted(queue, key=sortingFunction)
+                   
     i = len(queue)
 
     timestep = 0
@@ -24,7 +49,7 @@ def PREDICT_PART2(instance, sortingFunction=lambda task: task.remainingTime):
         
         if(i == len(instance)):
             # fake task just to handle last case scenario
-            next_insertion_task = utils.Task(0, 0, 0, 1000000)
+            next_insertion_task = utils.Task(0, 0, 0, np.inf)
         else:
             # get the next task to be inserted
             next_insertion_task = instance_sorted[i]
@@ -36,9 +61,13 @@ def PREDICT_PART2(instance, sortingFunction=lambda task: task.remainingTime):
             time_till_next_insert = next_insertion_task.start - timestep
 
             if queue != []:
+                quantum = 1/len(queue)
                 # run the current task for maximum time_till_next_insert time
                 current_task = queue.pop(0)
-                runtime = current_task.run(time_till_next_insert)
+                if useQuantum:
+                    runtime = current_task.run(quantum)
+                else:
+                    runtime = current_task.run(time_till_next_insert)
                 # keep track of the solution
                 solution.append((current_task.id, runtime))
                 # the real time passed
@@ -58,7 +87,8 @@ def PREDICT_PART2(instance, sortingFunction=lambda task: task.remainingTime):
                 queue.append(next_insertion_task)
                 i += 1
                 # sort the queue
-                queue = sorted(queue, key=sortingFunction)
+                if sortingFunction != None:
+                    queue = sorted(queue, key=sortingFunction)
                 
                 break
     
