@@ -89,12 +89,12 @@ def generateInstance(nb_tasks=10,
     
 
     
-def plotGant(solution, nb_tasks=10, colors=None, title=None):
+def plotGant(solution, nb_tasks=10, colors=None, title=None, filename = None):
 
     if colors is None:
         colors = np.random.rand(nb_tasks, 3)
         
-    fig, ax = plt.subplots(figsize=(nb_tasks, 20))
+    fig, ax = plt.subplots(figsize=(nb_tasks, 10))
 
       
     # Setting labels for x-axis and y-axis
@@ -114,5 +114,6 @@ def plotGant(solution, nb_tasks=10, colors=None, title=None):
 
     if title is not None:
         plt.title(f"Objective : {title:0.2f}", fontsize=32)
+        plt.savefig(filename)
     plt.show()
     
